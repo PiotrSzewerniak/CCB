@@ -1,0 +1,124 @@
+#include "B4aKrattaParameterisation.hh"
+
+#include "G4VPhysicalVolume.hh"
+#include "G4ThreeVector.hh"
+#include "G4Tubs.hh"
+#include "G4SystemOfUnits.hh"
+
+
+
+B4aKrattaParameterisation::B4aKrattaParameterisation(  
+        G4int    noDet, 
+        G4double thMin,
+	G4double thMax,
+	G4double phiMin,
+	G4double phiMax,
+	G4double widthKr1, 
+        G4double distX,
+	G4double distY,
+	G4double distZ,
+	G4double spacing
+	
+)
+ : G4VPVParameterisation()
+{
+  fNoDet  =  noDet; 
+  fThMin =  thMin;
+  fThMax =  thMax;
+  fPhiMin = phiMin;
+  fPhiMax = phiMax;
+  fWidth   =  widthKr1;
+  fSpacing =  spacing;
+  fDistX    = distX;
+  fDistY    = distY;
+  fDistZ    = distZ;
+
+   if( fNoDet > 0 ){
+     for (G4int copyNo=0;copyNo<fNoDet;copyNo++)
+       {
+	 
+	 fPhi[copyNo]=fPhiMin+copyNo*fWidth;
+	 fTheta[copyNo]=fThMin + 0.5*fWidth;
+
+	 fPsi[copyNo]= copyNo*40*mm;
+       }
+
+
+
+     //fRmaxIncr =  0.5 * (lengthFinal-lengthInitial)/(noChambers-1);
+     //if (spacingZ < widthChamber) {
+     //  G4Exception("B2bChamberParameterisation::B2bChamberParameterisation()",
+     //              "InvalidSetup", FatalException,
+     //              "Width>Spacing");
+      }
+   
+}
+
+
+
+B4aKrattaParameterisation::~B4aKrattaParameterisation()
+{ }
+
+
+
+
+void B4aKrattaParameterisation::ComputeTransformation
+(const G4int copyNo, G4VPhysicalVolume* physVol) const
+{
+  // Note: copyNo will start with zero!
+
+  //G4double tg_th=fWidth/fDist;
+  //G4double th=atan(tg_th);
+  //G4double theta = fStartTh + copyNo*fWidth;
+  //G4ThreeVector origin(fDistX,fDistY,fDistZ);
+  //physVol->SetTranslation(origin);
+
+  G4RotationMatrix *rm0 = new G4RotationMatrix();
+  //rm0->rotateX(fPhi[copyNo]);
+  rm0->rotateY(-90.*deg);
+  //rm0->rotateZ(0.*deg);
+  
+  physVol->SetRotation(rm0);
+  
+  G4double fx,fy,fz;
+  
+  fx=fDistX*cos(fPhi[copyNo]);
+  fy=fDistX*sin(fPhi[copyNo]);
+
+  //fx=fPsi[copyNo]*cos(fPhi[copyNo])*sin(fTheta[copyNo]);
+  //fy=fPsi[copyNo]*sin(fPhi[copyNo])*sin(fTheta[copyNo]);
+  //fz=fDistX*cos(fTheta[copyNo]);//*fPsi[copyNo];
+
+  //fx=fDistX*cos(fPhi[copyNo])*sin(fTheta[copyNo]);
+  //fy=fDistX*sin(fPhi[copyNo])*sin(fTheta[copyNo]);
+  //fz=fDistX*cos(fTheta[copyNo]);//*fPsi[copyNo];
+  
+  //fx=0.;
+  //fz=fPsi[copyNo];
+
+  //G4ThreeVector origin2(fDistX,fz,0.);
+  G4ThreeVector origin2(fx,fy,0.);
+physVol->SetTranslation(origin2);
+
+  
+
+  
+  G4RotationMatrix *rm=new G4RotationMatrix();
+  //rm->set(fPhi[copyNo],fTheta[copyNo],fPsi[copyNo]) ;
+  rm->rotateX(fPhi[copyNo]);
+  //rm->rotateY(fTheta[copyNo]);
+  //rm->rotateZ(fPhi[copyNo]);
+  //rm->rotateY(fTheta[copyNo]);
+  //rm->rotateZ(fPhi[copyNo]);
+ 
+  //physVol->SetRotation(rm);
+
+
+
+}
+
+
+
+//void B4aKrattaParameterisation::ComputeDimensions(){}
+
+
