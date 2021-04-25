@@ -331,7 +331,7 @@ void B4aPrimaryGeneratorAction::RandomInit(G4int level )
 void B4aPrimaryGeneratorAction::Pos(void)
 {
   G4double bsgx,bsgy;
-  thigh = 1.5*mm;
+  thigh = 0.5*mm;
 
 
   bsgx = bfwhmx/(2.*sqrt(2.*log(2.)));
@@ -352,7 +352,7 @@ void B4aPrimaryGeneratorAction::Pos(void)
 
   vertex[0] = tXplace + G4RandGauss::shoot(0,1);
   vertex[1] = tYplace + G4RandGauss::shoot(0,1);
-  vertex[2] = tZplace - thigh + G4UniformRand()*2*thigh;
+  vertex[2] = tZplace -thigh + G4UniformRand()*2*thigh;
 
   // cout<<"@#!@!#!@"<<G4RandGauss::shoot(0,1)<<endl;
 
